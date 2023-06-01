@@ -8,10 +8,8 @@
 
 namespace Prezto\RateLimit;
 
-use Flintstone\Flintstone;
-
-use \Psr\Http\Message\RequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 class RateLimitMiddleware
 {
@@ -147,18 +145,18 @@ class RateLimitMiddleware
         return 0;
     }
 
-    protected function storeNewRequest($uniqueID, $oldCount)
+    protected function storeNewRequest($uniqueID, $count)
     {
         $key = $this->getKey($uniqueID);
-        $newCount = $oldCount + 1;
+        $count++;
 
         switch ($this->storageType) {
             case self::REDIS:
-                $this->handle->set($key, $newCount);
+                $this->handle->set($key, $count);
                 $this->handle->expire($key, $this->seconds);
                 break;
             case self::MEMCACHE:
-                $this->handle->set($key, $newCount, 0, $this->seconds);
+                $this->handle->set($key, $count, 0, $this->seconds);
                 break;
         }
     }
@@ -169,13 +167,16 @@ class RateLimitMiddleware
         return sprintf("%s-%s", $uniqueID, $bucket);
     }
 
-    public function __invoke(Request $request, Response $response, $next)
+    public function __invoke(Request $request, RequestHandler $handle)
     {
+        $response = $handle->handle($request);
+
         if (!$this->enabled) {
-            return $next($request, $response);
+            return $response;
         }
 
         $uniqueID = $_SERVER['REMOTE_ADDR'];
+
         $requestsCount = $this->storedRequestsCount($uniqueID);
 
         if ($requestsCount >= $this->maxRequests) {
@@ -184,6 +185,8 @@ class RateLimitMiddleware
         }
 
         $this->storeNewRequest($uniqueID, $requestsCount);
-        return $next($request, $response);
+        return $response;
     }
 }
+
+?>

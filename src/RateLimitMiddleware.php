@@ -6,7 +6,7 @@
  * Time: 2:51 AM
  */
 
-namespace Prezto\RateLimit;
+namespace CoonDesign\RateLimit;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;

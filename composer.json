@@ -12,6 +12,7 @@
     {
       "name": "Startail the 'Coon",
       "email": "startail@coondesign.eu"
+    }
   ],
   "require": {
     "php": ">=5.4.0",

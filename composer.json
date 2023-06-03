@@ -3,6 +3,7 @@
   "type": "library",
   "description": "PSR-7 rate limit implementation",
   "keywords": ["PSR-7", "middleware", "rate limit"],
+  "license": "MIT",
   "homepage": "https://github.com/startailcoon/rate-limit",
   "authors": [
     {

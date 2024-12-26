@@ -16,9 +16,10 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "ptrofimov/tinyredisclient": "^1.1",
-    "slim/psr7": "^1.6"
+    "php": "^8",
+    "tedivm/stash": "^1.1",
+    "slim/psr7": "^1.7",
+    "slim/slim": "^4.14"
   },
   "autoload": {
     "psr-4": { "CoonDesign\\RateLimit\\": "src/" }
